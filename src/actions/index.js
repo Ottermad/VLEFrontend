@@ -4,7 +4,8 @@ import {
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
   USER_CREATE_SUCCESS, USER_CREATE_REQUEST, USER_CREATE_FAILURE,
-  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS
+  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
+  SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -260,5 +261,53 @@ export function grantPermissionFailure(message) {
   return {
     type: GRANT_PERMISSION_FAILURE,
     message
+  }
+}
+
+function createSubjectRequest() {
+  return {
+    type: SUBJECT_CREATE_REQUEST
+  }
+}
+
+function createSubjectSuccess() {
+  return {
+    type: SUBJECT_CREATE_SUCCESS,
+    message: 'Created!'
+  }
+}
+
+function createSubjectFailure(message) {
+  return {
+    type: SUBJECT_CREATE_FAILURE,
+    message
+  }
+}
+
+export function createSubject(name) {
+  const id_token = localStorage.getItem('id_token')
+
+  let config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify({ name })
+  }
+
+  return dispatch => {
+    dispatch(createSubjectRequest())
+    fetch(`${BASE_URL}lessons/subject`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        console.log("ERROR", json.message)
+        dispatch(createSubjectFailure(json.message))
+      } else {
+        console.log("SUCCESS")
+        dispatch(createSubjectSuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
   }
 }

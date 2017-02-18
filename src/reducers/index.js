@@ -4,7 +4,8 @@ import {
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
   USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE,
-  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS
+  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
+  SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS
 } from '../constants'
 
 // The auth reducer. The starting state sets authentication
@@ -118,6 +119,26 @@ function grantPermission(state = {}, action) {
   }
 }
 
+function createSubject(state = {successMessage: '', errorMessage: ''}, action) {
+  switch (action.type) {
+    case SUBJECT_CREATE_REQUEST:
+      return state;
+    case SUBJECT_CREATE_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        successMessage: ''
+      });
+    case SUBJECT_CREATE_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: action.message,
+        errorMessage: ''
+      })
+    default:
+      return state;
+
+  }
+}
+
 
 
 // We combine the reducers here so that they
@@ -127,6 +148,7 @@ const reducer = combineReducers({
   usersListing,
   permissionsListing,
   userCreate,
+  createSubject,
   grantPermission
 })
 

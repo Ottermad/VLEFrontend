@@ -15,6 +15,7 @@ import Main from './containers/Main'
 import Login from './containers/Login';
 import UserListing from './containers/UserListing';
 import UserCreation from './containers/UserCreation';
+import SubjectCreation from './containers/SubjectCreation';
 
 import thunkMiddleware from 'redux-thunk'
 
@@ -35,6 +36,7 @@ ReactDOM.render(
         <Route path="/home" component={requireAuthentication(Main)}/>
         <Route path="/users" component={requireAuthentication(UserListing)} />
         <Route path="/users/create" component={requireAuthentication(UserCreation)}/>
+        <Route path="/subjects/create/" component={requireAuthentication(SubjectCreation)} />
         <Route path="login" component={Login} />
       </Route>
     </Router>
