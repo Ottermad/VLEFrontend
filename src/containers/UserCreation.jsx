@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  fetchPerimissionsRequest,fetchPerimissionsError, fetchPerimissionsSuccess ,
+  fetchPermissions,
   createUser
 } from '../actions';
 
@@ -19,33 +19,7 @@ class UserCreation extends Component {
   }
 
   componentDidMount() {
-    this.fetchPermissions()
-  }
-
-  fetchPermissions() {
-    let config = {
-      method: 'GET',
-      headers: {
-        'Authorization': `JWT ${this.props.id_token}`
-      },
-    }
-
-
-
-    // We dispatch requestLogin to kickoff the call to the API
-    this.props.fetchPerimissionsRequest()
-    return fetch('http://0.0.0.0:8000/permissions/permission', config)
-      .then(response => response.json())
-      .then(json => {
-        console.log(json)
-        if ("error" in json) {
-          this.props.fetchPerimissionsError(json.message)
-        } else {
-          const { permissions } = json;
-          this.props.fetchPerimissionsSuccess(permissions)
-        }
-      })
-      .catch(err => console.log("Error: ", err))
+    this.props.fetchPermissions()
   }
 
   createUser() {
@@ -158,7 +132,7 @@ function mapStateToProps(state) {
 
 
 const mapDispatchToProps = {
-  fetchPerimissionsRequest, fetchPerimissionsError, fetchPerimissionsSuccess,
+  fetchPermissions,
   createUser
 }
 

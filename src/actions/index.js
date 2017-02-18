@@ -133,6 +133,36 @@ export function fetchPerimissionsSuccess(permissions) {
 }
 
 
+export function fetchPermissions() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(fetchPerimissionsRequest())
+    return fetch(`${BASE_URL}permissions/permission`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          console.log("error", json.message)
+          dispatch(fetchPerimissionsError(json.message))
+        } else {
+          const { permissions } = json;
+          console.log(permissions)
+          dispatch(fetchPerimissionsSuccess(permissions))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+
 export function userCreateRequest() {
   return {
     type: USER_CREATE_REQUEST
