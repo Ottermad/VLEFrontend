@@ -7,7 +7,8 @@ import {
   GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
   SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
   LESSON_LISTING_REQUEST, LESSON_LISTING_FAILURE, LESSON_LISTING_SUCCESS,
-  SUBJECT_LISTING_SUCCESS, SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE
+  SUBJECT_LISTING_SUCCESS, SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE,
+  LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -314,6 +315,7 @@ export function createSubject(name) {
   }
 }
 
+// Subject Listing functions
 
 function subjectListingRequest() {
   return {
@@ -407,5 +409,54 @@ export function fetchLessons() {
         }
       })
       .catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Lesson Create actions
+function createLessonRequest() {
+  return {
+    type: LESSON_CREATE_REQUEST
+  }
+}
+
+function createLessonSuccess() {
+  return {
+    type: LESSON_CREATE_SUCCESS,
+    message: 'Created!'
+  }
+}
+
+function createLessonFailure(message) {
+  return {
+    type: LESSON_CREATE_FAILURE,
+    message
+  }
+}
+
+
+export function createLesson(lesson) {
+  const id_token = localStorage.getItem('id_token')
+
+  let config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify(lesson)
+  }
+
+  return dispatch => {
+    dispatch(createLessonRequest())
+    fetch(`${BASE_URL}lessons/lesson`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(createLessonFailure(json.message))
+      } else {
+        dispatch(createLessonSuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
   }
 }

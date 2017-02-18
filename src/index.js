@@ -18,6 +18,7 @@ import UserCreation from './containers/UserCreation';
 import SubjectCreation from './containers/SubjectCreation';
 import SubjectListing from './containers/SubjectListing';
 import LessonListing from './containers/LessonListing';
+import LessonCreation from './containers/LessonCreation';
 
 import thunkMiddleware from 'redux-thunk'
 
@@ -39,8 +40,9 @@ ReactDOM.render(
         <Route path="/users" component={requireAuthentication(UserListing)} />
         <Route path="/users/create" component={requireAuthentication(UserCreation)}/>
         <Route path="/subjects" component={requireAuthentication(SubjectListing)}/>
-        <Route path="/subjects/create/" component={requireAuthentication(SubjectCreation)} />
+        <Route path="/subjects/create" component={requireAuthentication(SubjectCreation)} />
         <Route path="/lessons" component={requireAuthentication(LessonListing)}/>
+        <Route path="/lessons/create" component={requireAuthentication(LessonCreation)} />
         <Route path="login" component={Login} />
       </Route>
     </Router>

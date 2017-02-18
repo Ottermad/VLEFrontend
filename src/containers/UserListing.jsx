@@ -54,7 +54,6 @@ class UserListing extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log("STATE", state)
   const { id_token } = state.auth;
   const { users} = state.usersListing;
   return {
