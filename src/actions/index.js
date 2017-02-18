@@ -5,7 +5,8 @@ import {
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
   USER_CREATE_SUCCESS, USER_CREATE_REQUEST, USER_CREATE_FAILURE,
   GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
-  SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS
+  SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
+  SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE, SUBJECT_LISTING_SUCCESS
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -309,5 +310,53 @@ export function createSubject(name) {
         dispatch(createSubjectSuccess())
       }
     }).catch(err => console.log("Error: ", err))
+  }
+}
+
+
+function subjectListingRequest() {
+  return {
+    type: SUBJECT_LISTING_REQUEST
+  }
+}
+
+function subjectListingSuccess(subjects) {
+  return {
+    type: SUBJECT_LISTING_SUCCESS,
+    subjects
+  }
+}
+
+function subjectListingFailure(message) {
+  return {
+    type: SUBJECT_LISTING_FAILURE,
+    message
+  }
+}
+
+
+export function fetchSubjects() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(subjectListingRequest())
+    return fetch(`${BASE_URL}lessons/subject`, config)
+      .then(response => response.json())
+      .then(json => {
+        if ("error" in json) {
+          dispatch(subjectListingFailure(json.message))
+        } else {
+          const { subjects } = json;
+          dispatch(subjectListingSuccess(subjects))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
   }
 }
