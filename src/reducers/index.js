@@ -6,7 +6,8 @@ import {
   USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE,
   GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
   SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
-  SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE, SUBJECT_LISTING_SUCCESS
+  SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE, SUBJECT_LISTING_SUCCESS,
+  LESSON_LISTING_REQUEST, LESSON_LISTING_FAILURE, LESSON_LISTING_SUCCESS
 } from '../constants'
 
 // The auth reducer. The starting state sets authentication
@@ -157,6 +158,24 @@ function subjectListing(state = {subjects: []}, action) {
   }
 }
 
+
+function lessonListing(state = {lessons: []}, action) {
+  switch(action.type) {
+    case LESSON_LISTING_REQUEST:
+      return state;
+    case LESSON_LISTING_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case LESSON_LISTING_SUCCESS:
+      return Object.assign({}, state, {
+        lessons: action.subjects
+      })
+    default:
+      return state;
+  }
+}
+
 // We combine the reducers here so that they
 // can be left split apart above
 const reducer = combineReducers({
@@ -166,7 +185,8 @@ const reducer = combineReducers({
   userCreate,
   createSubject,
   subjectListing,
-  grantPermission
+  grantPermission,
+  lessonListing
 })
 
 export default reducer;
