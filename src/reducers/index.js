@@ -12,7 +12,10 @@ import {
   LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE,
   LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
   ASSIGN_ESSAY_REQUEST, ASSIGN_ESSAY_FAILURE, ASSIGN_ESSAY_SUCCESS,
-  HOMEWORK_LESSON_DUE_REQUEST, HOMEWORK_LESSON_DUE_FAILURE, HOMEWORK_LESSON_DUE_SUCCESS
+  FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS,
+  HOMEWORK_DUE_REQUEST, HOMEWORK_DUE_SUCCESS, HOMEWORK_DUE_FAILURE,
+  FETCH_ESSAY_REQUEST, FETCH_ESSAY_SUCCESS, FETCH_ESSAY_FAILURE,
+  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE
 } from '../constants'
 
 // The auth reducer. The starting state sets authentication
@@ -256,23 +259,90 @@ function assignEssay(state = {}, action) {
   }
 }
 
-function homeworkForLesson(state = {homework: []}, action) {
+function fetchCurrentUserDetails(state = {user: {}}, action) {
   switch (action.type) {
-    case HOMEWORK_LESSON_DUE_REQUEST:
+    case FETCH_CURRENT_USER_DETAILS_REQUEST:
       return state;
-    case HOMEWORK_LESSON_DUE_FAILURE:
+    case FETCH_CURRENT_USER_DETAILS_FAILURE:
       return Object.assign({}, state, {
         errorMessage: action.message,
       });
-    case HOMEWORK_LESSON_DUE_SUCCESS:
+    case FETCH_CURRENT_USER_DETAILS_SUCCESS:
       return Object.assign({}, state, {
-        homework: action.homework,
-        errorMessage: ''
+        user: action.user
+      });
+    case REMOVE_CURRENT_USER_DETAILS:
+      return Object.assign({}, state, {
+        user: {}
       })
+    default:
+      return state;
+
+  }
+}
+
+function fetchHomeworkDue(state = {homework: []}, action) {
+  switch (action.type) {
+    case HOMEWORK_DUE_REQUEST:
+      return state;
+    case HOMEWORK_DUE_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case HOMEWORK_DUE_SUCCESS:
+      return Object.assign({}, state, {
+        homework: action.homework
+      });
     default:
       return state;
   }
 }
+
+function fetchEssay(state = {essay: {
+  title: '',
+  description: '',
+  dateDue: ''
+}}, action) {
+  switch (action.type) {
+    case FETCH_ESSAY_REQUEST:
+      return state;
+    case FETCH_ESSAY_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case FETCH_ESSAY_SUCCESS:
+      return Object.assign({}, state, {
+        essay: action.essay
+      });
+    default:
+      return state;
+  }
+}
+
+function submitEssay(state = {}, action) {
+  switch (action.type) {
+    case SUBMIT_ESSAY_REQUEST:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        failed: false,
+        hasResponse: false
+      });;
+    case SUBMIT_ESSAY_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        failed: true,
+        hasResponse: true
+      });
+    case SUBMIT_ESSAY_SUCCESS:
+      return Object.assign({}, state, {
+        failed: false,
+        hasResponse: true
+      });
+    default:
+      return state;
+  }
+}
+
 
 // We combine the reducers here so that they
 // can be left split apart above
@@ -289,7 +359,10 @@ const reducer = combineReducers({
   lessonsTaughtListing,
   lessonDetail,
   assignEssay,
-  homeworkForLesson
+  fetchCurrentUserDetails,
+  fetchHomeworkDue,
+  fetchEssay,
+  submitEssay
 })
 
 export default reducer;

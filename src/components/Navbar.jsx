@@ -1,43 +1,54 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions';
+import TeacherNavItems from './TeacherNavItems';
+import AdminNavItems from './AdminNavItems';
+import StudentNavItems from './StudentNavItems';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
-class Navbar extends Component {
+class MainNavbar extends Component {
   logOut() {
     this.props.logoutUser()
   }
 
   render() {
-    let logInOrOut = <a>Login</a>;
+    console.log(this.props)
+    let logInOrOut = <NavItem>Login</NavItem>;
     if (this.props.isAuthenticated) {
-      logInOrOut = <a onClick={() => this.logOut()}>Logout</a>
+      logInOrOut = <NavItem onClick={() => this.logOut()}>Logout</NavItem>
     }
 
     return (
-      <nav className="navbar navbar-inverse navbar-fixed-top">
-        <div className="container">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <a className="navbar-brand" href="#">VLE</a>
-          </div>
-          <div id="navbar" className="collapse navbar-collapse">
-            <ul className="nav navbar-nav">
-              <li>{logInOrOut}</li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <Navbar fixedTop>
+        <Navbar.Header>
+          <Navbar.Brand>
+            VLE
+          </Navbar.Brand>
+        </Navbar.Header>
+        {
+          this.props.currentUser.isTeacher ? <TeacherNavItems /> : ""
+        }
+        {
+          this.props.currentUser.isAdmin ? <AdminNavItems /> : ""
+        }
+        {
+          this.props.currentUser.isStudent ? <StudentNavItems /> : ""
+        }
+        <Nav>
+          {logInOrOut}
+        </Nav>
+      </Navbar>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated
-});
+function mapStateToProps(state) {
+  const isAuthenticated = state.auth.isAuthenticated;
+  const currentUser = state.fetchCurrentUserDetails.user;
+  return {
+    isAuthenticated,
+    currentUser
+  }
+}
 
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default connect(mapStateToProps, { logoutUser })(MainNavbar);

@@ -12,7 +12,10 @@ import {
   LESSON_TAUGHT_LISTING_REQUEST, LESSON_TAUGHT_LISTING_FAILURE, LESSON_TAUGHT_LISTING_SUCCESS,
   LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
   ASSIGN_ESSAY_REQUEST, ASSIGN_ESSAY_FAILURE, ASSIGN_ESSAY_SUCCESS,
-  HOMEWORK_LESSON_DUE_REQUEST, HOMEWORK_LESSON_DUE_FAILURE, HOMEWORK_LESSON_DUE_SUCCESS
+  FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS,
+  HOMEWORK_DUE_REQUEST, HOMEWORK_DUE_SUCCESS, HOMEWORK_DUE_FAILURE,
+  FETCH_ESSAY_REQUEST, FETCH_ESSAY_SUCCESS, FETCH_ESSAY_FAILURE,
+  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -65,7 +68,9 @@ export function logoutUser() {
   return dispatch => {
     dispatch(requestLogout())
     localStorage.removeItem('id_token')
+    localStorage.removeItem('currentUser')
     dispatch(receiveLogout())
+    dispatch(removeCurrentUserDetails())
     browserHistory.replace("/login")
   }
 }
@@ -612,29 +617,209 @@ export function assignEssay(essay) {
   }
 }
 
-
-// Homework for lesson
-// Lesson Detail
-function homeworkForLessonRequest() {
+// Fetch Current User Details
+function fetchCurrentUserDetailsRequest() {
   return {
-    type: HOMEWORK_LESSON_DUE_REQUEST
+    type: FETCH_CURRENT_USER_DETAILS_REQUEST
   }
 }
 
-function homeworkForLessonSuccess(homework) {
+function fetchCurrentUserDetailsFailure(message) {
   return {
-    type: HOMEWORK_LESSON_DUE_SUCCESS,
-    homework
-  }
-}
-
-function homeworkForLessonFailure(message) {
-  return {
-    type: HOMEWORK_LESSON_DUE_FAILURE,
+    type: FETCH_CURRENT_USER_DETAILS_FAILURE,
     message
   }
 }
 
-export function fetchHomeworkForLesson(lesson_id) {
+function removeCurrentUserDetails() {
+  return {
+    type: REMOVE_CURRENT_USER_DETAILS,
+  }
+}
 
+export function fetchCurrentUserDetailsSuccess(user) {
+  return {
+    type: FETCH_CURRENT_USER_DETAILS_SUCCESS,
+    user
+  }
+}
+
+export function fetchCurrentUserDetails() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(fetchCurrentUserDetailsRequest())
+    return fetch(`${BASE_URL}user/me?nest-permissions=true`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(fetchCurrentUserDetailsFailure(json.message))
+        } else {
+          const { user } = json;
+          user.isTeacher = user.permissions.some(permission => {
+            return permission.name === "Teacher";
+          });
+          user.isAdmin = user.permissions.some(permission => {
+            return permission.name === "Administrator";
+          });
+          user.isStudent = user.permissions.some(permission => {
+            return permission.name === "Student";
+          });
+          localStorage.setItem('currentUser', JSON.stringify(user))
+          dispatch(fetchCurrentUserDetailsSuccess(user))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+// Homework
+function homeworkDueRequest() {
+  return {
+    type: HOMEWORK_DUE_REQUEST
+  }
+}
+
+function homeworkDueFailure(message) {
+  return {
+    type: HOMEWORK_DUE_FAILURE,
+    message
+  }
+}
+
+function homeworkDueSuccess(homework) {
+  return {
+    type: HOMEWORK_DUE_SUCCESS,
+    homework
+  }
+}
+
+export function fetchHomeworkDue() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(homeworkDueRequest())
+    return fetch(`${BASE_URL}homework/summary?nest-lessons=true`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(homeworkDueFailure(json.message))
+        } else {
+          const { homework } = json;
+          dispatch(homeworkDueSuccess(homework))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Fetch Essay
+function fetchEssayRequest() {
+  return {
+    type: FETCH_ESSAY_REQUEST
+  }
+}
+
+function fetchEssayFailure(message) {
+  return {
+    type: FETCH_ESSAY_FAILURE,
+    message
+  }
+}
+
+function fetchEssaySuccess(essay) {
+  return {
+    type: FETCH_ESSAY_SUCCESS,
+    essay
+  }
+}
+
+
+export function fetchEssay(essayId) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(fetchEssayRequest())
+    return fetch(`${BASE_URL}homework/essay/${essayId}`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(fetchEssayFailure(json.message))
+        } else {
+          const { essay } = json;
+          dispatch(fetchEssaySuccess(essay))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Submit Essay
+function submitEssayRequest() {
+  return {
+    type: SUBMIT_ESSAY_REQUEST
+  }
+}
+
+function submitEssayFailure(message) {
+  return {
+    type: SUBMIT_ESSAY_FAILURE,
+    message
+  }
+}
+
+function submitEssaySuccess() {
+  return {
+    type: SUBMIT_ESSAY_SUCCESS,
+  }
+}
+
+
+export function submitEssay(submission, essayId) {
+  const id_token = localStorage.getItem('id_token')
+
+  let config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify(submission)
+  }
+
+  return dispatch => {
+    dispatch(submitEssayRequest())
+    fetch(`${BASE_URL}homework/essay/${essayId}`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(submitEssayFailure(json.message))
+      } else {
+        dispatch(submitEssaySuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
 }

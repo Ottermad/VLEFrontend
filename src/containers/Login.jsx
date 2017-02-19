@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { requestLogin, loginError, receiveLogin } from '../actions';
+import { requestLogin, loginError, receiveLogin, fetchCurrentUserDetails } from '../actions';
 import { browserHistory } from 'react-router';
 
 class Login extends Component {
@@ -39,6 +39,7 @@ class Login extends Component {
           const { access_token } = json;
           localStorage.setItem('id_token', access_token);
           this.props.receiveLogin(access_token)
+          this.props.fetchCurrentUserDetails()
           browserHistory.replace("/home")
         }
       })
@@ -108,4 +109,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { loginError, requestLogin, receiveLogin })(Login);
+export default connect(mapStateToProps, { loginError, requestLogin, receiveLogin, fetchCurrentUserDetails })(Login);

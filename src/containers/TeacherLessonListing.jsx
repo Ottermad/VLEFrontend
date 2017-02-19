@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fetchLessonsTaught } from '../actions';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 class TeacherLessonListing extends Component {
 
@@ -21,10 +22,12 @@ class TeacherLessonListing extends Component {
           <tbody>
             {
               this.props.lessons.map(lesson => {
-                const { name, id } = lesson;
+                const { name, id, subject } = lesson;
                 return (
                   <tr key={id}>
-                    <td>{name}</td>
+                    <td>
+                      <Link to={"/teacher/lessons/" + id}>{name} - {subject.name}</Link>
+                    </td>
                   </tr>
                 );
               })

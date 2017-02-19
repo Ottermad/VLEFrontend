@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import reducer from './reducers';
 
-import {receiveLogin} from './actions';
+import {receiveLogin, fetchCurrentUserDetailsSuccess} from './actions';
 
 import {requireAuthentication} from './components/AuthenticatedComponent';
 
@@ -22,6 +22,8 @@ import LessonCreation from './containers/LessonCreation';
 import TeacherLessonListing from './containers/TeacherLessonListing';
 import LessonDetail from './containers/LessonDetail';
 import AssignEssay from './containers/AssignEssay';
+import HomeworkDue from './containers/HomeworkDue';
+import SubmitEssay from './containers/SubmitEssay';
 
 import thunkMiddleware from 'redux-thunk'
 
@@ -31,8 +33,10 @@ let store = createStoreWithMiddleware(reducer)
 const rootElement = document.getElementById('root');
 
 let token = localStorage.getItem('id_token');
-if (token !== null) {
+let currentUser = localStorage.getItem('currentUser');
+if (token !== null && currentUser !== null) {
   store.dispatch(receiveLogin(token));
+  store.dispatch(fetchCurrentUserDetailsSuccess(JSON.parse(currentUser)))
 }
 
 ReactDOM.render(
@@ -53,6 +57,12 @@ ReactDOM.render(
           <Route path="lessons/:id" component={requireAuthentication(LessonDetail)} />
           <Route path="assign">
             <Route path="essay" component={requireAuthentication(AssignEssay)}/>
+          </Route>
+        </Route>
+        <Route path="student">
+          <Route path="homework" component={requireAuthentication(HomeworkDue)} />
+          <Route path="submit">
+            <Route path="essay/:id" component={requireAuthentication(SubmitEssay)}/>
           </Route>
         </Route>
         <Route path="login" component={Login} />
