@@ -8,7 +8,11 @@ import {
   SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
   SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE, SUBJECT_LISTING_SUCCESS,
   LESSON_LISTING_REQUEST, LESSON_LISTING_FAILURE, LESSON_LISTING_SUCCESS,
-  LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE
+  LESSON_TAUGHT_LISTING_REQUEST, LESSON_TAUGHT_LISTING_FAILURE, LESSON_TAUGHT_LISTING_SUCCESS,
+  LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE,
+  LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
+  ASSIGN_ESSAY_REQUEST, ASSIGN_ESSAY_FAILURE, ASSIGN_ESSAY_SUCCESS,
+  HOMEWORK_LESSON_DUE_REQUEST, HOMEWORK_LESSON_DUE_FAILURE, HOMEWORK_LESSON_DUE_SUCCESS
 } from '../constants'
 
 // The auth reducer. The starting state sets authentication
@@ -198,6 +202,78 @@ function createLesson(state = {successMessage: '', errorMessage: '', lessons: []
   }
 }
 
+function lessonsTaughtListing(state = {lessons: []}, action) {
+  switch(action.type) {
+    case LESSON_TAUGHT_LISTING_REQUEST:
+      return state;
+    case LESSON_TAUGHT_LISTING_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case LESSON_TAUGHT_LISTING_SUCCESS:
+      return Object.assign({}, state, {
+        lessons: action.lessons
+      })
+    default:
+      return state;
+  }
+}
+
+function lessonDetail(state = {lesson: {name: '', homework: [], teachers: [], students: [], subject: {name: ''}}}, action) {
+  switch(action.type) {
+    case LESSON_DETAIL_REQUEST:
+      return state;
+    case LESSON_DETAIL_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case LESSON_DETAIL_SUCCESS:
+      return Object.assign({}, state, {
+        lesson: action.lesson,
+      });
+    default:
+      return state;
+  }
+}
+
+function assignEssay(state = {}, action) {
+  switch (action.type) {
+    case ASSIGN_ESSAY_REQUEST:
+      return state;
+    case ASSIGN_ESSAY_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        successMessage: ''
+      });
+    case ASSIGN_ESSAY_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: action.message,
+        errorMessage: ''
+      })
+    default:
+      return state;
+
+  }
+}
+
+function homeworkForLesson(state = {homework: []}, action) {
+  switch (action.type) {
+    case HOMEWORK_LESSON_DUE_REQUEST:
+      return state;
+    case HOMEWORK_LESSON_DUE_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case HOMEWORK_LESSON_DUE_SUCCESS:
+      return Object.assign({}, state, {
+        homework: action.homework,
+        errorMessage: ''
+      })
+    default:
+      return state;
+  }
+}
+
 // We combine the reducers here so that they
 // can be left split apart above
 const reducer = combineReducers({
@@ -209,7 +285,11 @@ const reducer = combineReducers({
   subjectListing,
   grantPermission,
   lessonListing,
-  createLesson
+  createLesson,
+  lessonsTaughtListing,
+  lessonDetail,
+  assignEssay,
+  homeworkForLesson
 })
 
 export default reducer;

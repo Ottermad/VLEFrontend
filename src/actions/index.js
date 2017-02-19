@@ -8,7 +8,11 @@ import {
   SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
   LESSON_LISTING_REQUEST, LESSON_LISTING_FAILURE, LESSON_LISTING_SUCCESS,
   SUBJECT_LISTING_SUCCESS, SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE,
-  LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE
+  LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE,
+  LESSON_TAUGHT_LISTING_REQUEST, LESSON_TAUGHT_LISTING_FAILURE, LESSON_TAUGHT_LISTING_SUCCESS,
+  LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
+  ASSIGN_ESSAY_REQUEST, ASSIGN_ESSAY_FAILURE, ASSIGN_ESSAY_SUCCESS,
+  HOMEWORK_LESSON_DUE_REQUEST, HOMEWORK_LESSON_DUE_FAILURE, HOMEWORK_LESSON_DUE_SUCCESS
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -459,4 +463,178 @@ export function createLesson(lesson) {
       }
     }).catch(err => console.log("Error: ", err))
   }
+}
+
+
+// Lessons Taught Listing functions
+
+function lessonsTaughtListingRequest() {
+  return {
+    type: LESSON_TAUGHT_LISTING_REQUEST
+  }
+}
+
+function lessonsTaughtListingSuccess(lessons) {
+  return {
+    type: LESSON_TAUGHT_LISTING_SUCCESS,
+    lessons
+  }
+}
+
+function lessonsTaughtListingFailure(message) {
+  return {
+    type: LESSON_TAUGHT_LISTING_FAILURE,
+    message
+  }
+}
+
+export function fetchLessonsTaught() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(lessonsTaughtListingRequest())
+    return fetch(`${BASE_URL}lessons/lesson/taught?nest-subject=true`, config)
+      .then(response => response.json())
+      .then(json => {
+        if ("error" in json) {
+          dispatch(lessonsTaughtListingFailure(json.message))
+        } else {
+          const { lessons } = json;
+          dispatch(lessonsTaughtListingSuccess(lessons))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+// Lesson Detail
+function lessonDetailRequest() {
+  return {
+    type: LESSON_DETAIL_REQUEST
+  }
+}
+
+function lessonDetailSuccess(lesson) {
+  return {
+    type: LESSON_DETAIL_SUCCESS,
+    lesson
+  }
+}
+
+function lessonDetailFailure(message) {
+  return {
+    type: LESSON_DETAIL_FAILURE,
+    message
+  }
+}
+
+export function fetchLesson(id) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(lessonDetailRequest())
+    return fetch(`${BASE_URL}lessons/lesson/${id}?nest-teachers=true&nest-students=true&nest-subject=true&nest-homework=true`, config)
+      .then(response => response.json().then(json => ({json, response})))
+      .then(({json, response}) => {
+        if (response.status === 404) {
+          dispatch(lessonDetailFailure(`Lesson with id: ${id} not found.`))
+        }
+        else if ("error" in json) {
+          dispatch(lessonDetailFailure(json.message))
+        } else {
+          const { lesson } = json;
+          dispatch(lessonDetailSuccess(lesson))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Assign Essay actions
+function assignEssayRequest() {
+  return {
+    type: ASSIGN_ESSAY_REQUEST
+  }
+}
+
+function assignEssaySuccess() {
+  return {
+    type: ASSIGN_ESSAY_SUCCESS,
+    message: 'Assigned'
+  }
+}
+
+function assignEssayFailure(message) {
+  return {
+    type: ASSIGN_ESSAY_FAILURE,
+    message
+  }
+}
+
+export function assignEssay(essay) {
+  const id_token = localStorage.getItem('id_token')
+
+  let config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify(essay)
+  }
+
+  return dispatch => {
+    dispatch(assignEssayRequest())
+    fetch(`${BASE_URL}homework/essay`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(assignEssayFailure(json.message))
+      } else {
+        dispatch(assignEssaySuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Homework for lesson
+// Lesson Detail
+function homeworkForLessonRequest() {
+  return {
+    type: HOMEWORK_LESSON_DUE_REQUEST
+  }
+}
+
+function homeworkForLessonSuccess(homework) {
+  return {
+    type: HOMEWORK_LESSON_DUE_SUCCESS,
+    homework
+  }
+}
+
+function homeworkForLessonFailure(message) {
+  return {
+    type: HOMEWORK_LESSON_DUE_FAILURE,
+    message
+  }
+}
+
+export function fetchHomeworkForLesson(lesson_id) {
+
 }

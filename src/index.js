@@ -19,6 +19,9 @@ import SubjectCreation from './containers/SubjectCreation';
 import SubjectListing from './containers/SubjectListing';
 import LessonListing from './containers/LessonListing';
 import LessonCreation from './containers/LessonCreation';
+import TeacherLessonListing from './containers/TeacherLessonListing';
+import LessonDetail from './containers/LessonDetail';
+import AssignEssay from './containers/AssignEssay';
 
 import thunkMiddleware from 'redux-thunk'
 
@@ -36,13 +39,22 @@ ReactDOM.render(
   <Provider store={store}>
     <Router  path="/" history={browserHistory}>
       <Route path="/" component={App}>
-        <Route path="/home" component={requireAuthentication(Main)}/>
-        <Route path="/users" component={requireAuthentication(UserListing)} />
-        <Route path="/users/create" component={requireAuthentication(UserCreation)}/>
-        <Route path="/subjects" component={requireAuthentication(SubjectListing)}/>
-        <Route path="/subjects/create" component={requireAuthentication(SubjectCreation)} />
-        <Route path="/lessons" component={requireAuthentication(LessonListing)}/>
-        <Route path="/lessons/create" component={requireAuthentication(LessonCreation)} />
+        <Route path="home" component={requireAuthentication(Main)}/>
+        <Route path="admin">
+          <Route path="users" component={requireAuthentication(UserListing)} />
+          <Route path="users/create" component={requireAuthentication(UserCreation)}/>
+          <Route path="subjects" component={requireAuthentication(SubjectListing)}/>
+          <Route path="subjects/create" component={requireAuthentication(SubjectCreation)} />
+          <Route path="lessons" component={requireAuthentication(LessonListing)}/>
+          <Route path="lessons/create" component={requireAuthentication(LessonCreation)} />
+        </Route>
+        <Route path="teacher">
+          <Route path="lessons" component={requireAuthentication(TeacherLessonListing)} />
+          <Route path="lessons/:id" component={requireAuthentication(LessonDetail)} />
+          <Route path="assign">
+            <Route path="essay" component={requireAuthentication(AssignEssay)}/>
+          </Route>
+        </Route>
         <Route path="login" component={Login} />
       </Route>
     </Router>
