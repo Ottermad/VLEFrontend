@@ -24,6 +24,9 @@ import LessonDetail from './containers/LessonDetail';
 import AssignEssay from './containers/AssignEssay';
 import HomeworkDue from './containers/HomeworkDue';
 import SubmitEssay from './containers/SubmitEssay';
+import SubmissionsListing from './containers/SubmissionsListing';
+import ViewEssay from './containers/ViewEssay';
+import SchoolSignUp from './containers/SchoolSignUp';
 
 import thunkMiddleware from 'redux-thunk'
 
@@ -58,6 +61,8 @@ ReactDOM.render(
           <Route path="assign">
             <Route path="essay" component={requireAuthentication(AssignEssay)}/>
           </Route>
+          <Route path="homework/:id/submissions" component={requireAuthentication(SubmissionsListing)}/>
+          <Route path="submissions/essay/:id" component={requireAuthentication(ViewEssay)}/>
         </Route>
         <Route path="student">
           <Route path="homework" component={requireAuthentication(HomeworkDue)} />
@@ -66,6 +71,7 @@ ReactDOM.render(
           </Route>
         </Route>
         <Route path="login" component={Login} />
+        <Route path="signup" component={SchoolSignUp} />
       </Route>
     </Router>
   </Provider>,

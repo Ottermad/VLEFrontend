@@ -115,6 +115,8 @@ class LessonCreation extends Component {
                     return (
                       <option value={id} key={id}>{first_name} {last_name}</option>
                     )
+                  } else {
+                    return ""
                   }
                 })
               }
@@ -134,6 +136,8 @@ class LessonCreation extends Component {
                     return (
                       <option value={id} key={id}>{first_name} {last_name}</option>
                     )
+                  } else {
+                    return ""
                   }
                 })
               }

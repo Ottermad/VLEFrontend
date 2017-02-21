@@ -1,4 +1,5 @@
 import {
+  SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE,
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
   LOGOUT_REQUEST, LOGOUT_SUCCESS,
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
@@ -15,11 +16,57 @@ import {
   FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS,
   HOMEWORK_DUE_REQUEST, HOMEWORK_DUE_SUCCESS, HOMEWORK_DUE_FAILURE,
   FETCH_ESSAY_REQUEST, FETCH_ESSAY_SUCCESS, FETCH_ESSAY_FAILURE,
-  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE
+  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE,
+  FETCH_SUBMISSIONS_REQUEST, FETCH_SUBMISSIONS_FAILURE, FETCH_SUBMISSIONS_SUCCESS,
+  FETCH_ESSAY_SUBMISSION_REQUEST, FETCH_ESSAY_SUBMISSION_FAILURE, FETCH_ESSAY_SUBMISSION_SUCCESS
 } from '../constants';
 import { browserHistory } from 'react-router';
 
 const BASE_URL = 'http://0.0.0.0:8000/'
+
+function signUpRequest() {
+  return {
+    type: SIGNUP_REQUEST
+  }
+}
+
+function signUpFailure(message) {
+  return {
+    type: SIGNUP_FAILURE,
+    message
+  }
+}
+
+function signUpSuccess() {
+  return {
+    type: SIGNUP_SUCCESS
+  }
+}
+
+export function signUp(data) {
+  const { first_name, last_name, email, username, password, school_name } = data;
+
+  let config = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password, first_name, last_name, email, school_name })
+  }
+
+  return dispatch => {
+    dispatch(signUpRequest())
+    fetch(`${BASE_URL}school/signup`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(signUpFailure(json.message))
+      } else {
+        dispatch(signUpSuccess());
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
 
 export function requestLogin(creds) {
   return {
@@ -821,5 +868,99 @@ export function submitEssay(submission, essayId) {
         dispatch(submitEssaySuccess())
       }
     }).catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Fetch Submissions
+function fetchSubmissionsRequest() {
+  return {
+    type: FETCH_SUBMISSIONS_REQUEST
+  }
+}
+
+function fetchSubmissionsFailure(message) {
+  return {
+    type: FETCH_SUBMISSIONS_FAILURE,
+    message
+  }
+}
+
+function fetchSubmissionsSuccess(submissions) {
+  return {
+    type: FETCH_SUBMISSIONS_SUCCESS,
+    submissions
+  }
+}
+
+export function fetchSubmissions(homeworkId) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(fetchSubmissionsRequest())
+    return fetch(`${BASE_URL}homework/homework/${homeworkId}/submissions`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(fetchSubmissionsFailure(json.message))
+        } else {
+          const { submissions } = json;
+          dispatch(fetchSubmissionsSuccess(submissions))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
+// Fetch Essay Submission
+function fetchEssaySubmissionRequest() {
+  return {
+    type: FETCH_ESSAY_SUBMISSION_REQUEST
+  }
+}
+
+function fetchEssaySubmissionFailure(message) {
+  return {
+    type: FETCH_ESSAY_SUBMISSION_FAILURE,
+    message
+  }
+}
+
+function fetchEssaySubmissionSuccess(submission) {
+  return {
+    type: FETCH_ESSAY_SUBMISSION_SUCCESS,
+    submission
+  }
+}
+
+export function fetchEssaySubmission(submissionId) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(fetchEssaySubmissionRequest())
+    return fetch(`${BASE_URL}homework/essay/submission/${submissionId}`, config)
+      .then(response => response.json())
+      .then(json => {
+        if ("error" in json) {
+          dispatch(fetchEssaySubmissionFailure(json.message))
+        } else {
+          const { submission } = json;
+          dispatch(fetchEssaySubmissionSuccess(submission))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
   }
 }

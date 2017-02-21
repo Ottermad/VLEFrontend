@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fetchLesson } from '../actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { Link } from 'react-router';
 
 class LessonDetail extends Component {
 
@@ -53,6 +54,7 @@ class LessonDetail extends Component {
               <th>Type</th>
               <th>Description</th>
               <th>Date Due</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -67,6 +69,7 @@ class LessonDetail extends Component {
                     <td>{homework.type}</td>
                     <td>{homework.description}</td>
                     <td>{homework.date_due}</td>
+                    <td><Link to={`/teacher/homework/${homework.id}/submissions`}>View Submissions</Link></td>
                   </tr>
                 )
               })

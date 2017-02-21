@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import {
+  SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE,
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS,
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
@@ -15,12 +16,36 @@ import {
   FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS,
   HOMEWORK_DUE_REQUEST, HOMEWORK_DUE_SUCCESS, HOMEWORK_DUE_FAILURE,
   FETCH_ESSAY_REQUEST, FETCH_ESSAY_SUCCESS, FETCH_ESSAY_FAILURE,
-  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE
+  SUBMIT_ESSAY_REQUEST, SUBMIT_ESSAY_SUCCESS, SUBMIT_ESSAY_FAILURE,
+  FETCH_SUBMISSIONS_REQUEST, FETCH_SUBMISSIONS_FAILURE, FETCH_SUBMISSIONS_SUCCESS,
+  FETCH_ESSAY_SUBMISSION_REQUEST, FETCH_ESSAY_SUBMISSION_FAILURE, FETCH_ESSAY_SUBMISSION_SUCCESS
 } from '../constants'
 
+
+// Sign Up reducer
+function signUp(state = {}, action) {
+  switch (action.type) {
+    case SIGNUP_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+      });
+    case SIGNUP_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        isFetching: false,
+        hasFailed: true,
+      })
+    case SIGNUP_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        hasFailed: false,
+      })
+    default:
+      return state;
+  }
+}
 // The auth reducer. The starting state sets authentication
-// based on a token being in local storage. In a real app,
-// we would also want a util to check if the token is expired.
+// based on a token being in local storage.
 function auth(state = {
     isFetching: false,
     isAuthenticated: localStorage.getItem('id_token') ? true : false,
@@ -326,7 +351,7 @@ function submitEssay(state = {}, action) {
         errorMessage: action.message,
         failed: false,
         hasResponse: false
-      });;
+      });
     case SUBMIT_ESSAY_FAILURE:
       return Object.assign({}, state, {
         errorMessage: action.message,
@@ -343,10 +368,50 @@ function submitEssay(state = {}, action) {
   }
 }
 
+function fetchSubmissions(state = {submissions: []}, action) {
+  switch (action.type) {
+    case FETCH_SUBMISSIONS_REQUEST:
+      return state;
+    case FETCH_SUBMISSIONS_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case FETCH_SUBMISSIONS_SUCCESS:
+      return Object.assign({}, state, {
+        submissions: action.submissions
+      });
+    default:
+      return state;
+  }
+}
+
+function fetchEssaySubmission(state = {submission: {}, hasResponse: false}, action) {
+  switch (action.type) {
+    case FETCH_ESSAY_SUBMISSION_REQUEST:
+      return Object.assign({}, state, {
+        hasResponse: false,
+      });
+    case FETCH_ESSAY_SUBMISSION_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        hasResponse: true,
+        error: true
+      });
+    case FETCH_ESSAY_SUBMISSION_SUCCESS:
+      return Object.assign({}, state, {
+        submission: action.submission,
+        error: false,
+        hasResponse: true
+      });
+    default:
+      return state;
+  }
+}
 
 // We combine the reducers here so that they
 // can be left split apart above
 const reducer = combineReducers({
+  signUp,
   auth,
   usersListing,
   permissionsListing,
@@ -362,7 +427,9 @@ const reducer = combineReducers({
   fetchCurrentUserDetails,
   fetchHomeworkDue,
   fetchEssay,
-  submitEssay
+  submitEssay,
+  fetchSubmissions,
+  fetchEssaySubmission
 })
 
 export default reducer;
