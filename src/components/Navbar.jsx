@@ -5,6 +5,7 @@ import TeacherNavItems from './TeacherNavItems';
 import AdminNavItems from './AdminNavItems';
 import StudentNavItems from './StudentNavItems';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 class MainNavbar extends Component {
   logOut() {
@@ -13,9 +14,22 @@ class MainNavbar extends Component {
 
   render() {
     console.log(this.props)
-    let logInOrOut = <NavItem>Login</NavItem>;
+    let logInOrOut = (
+      <Nav>
+        <LinkContainer to={{ pathname: '/login' }}>
+          <NavItem>Login</NavItem>
+        </LinkContainer>
+        <LinkContainer to={{ pathname: '/signup' }}>
+          <NavItem>Sign Up</NavItem>
+        </LinkContainer>
+      </Nav>
+    );
     if (this.props.isAuthenticated) {
-      logInOrOut = <NavItem onClick={() => this.logOut()}>Logout</NavItem>
+      logInOrOut = (
+        <Nav>
+          <NavItem onClick={() => this.logOut()}>Logout</NavItem>
+        </Nav>
+      )
     }
 
     return (
@@ -34,9 +48,7 @@ class MainNavbar extends Component {
         {
           this.props.currentUser.isStudent ? <StudentNavItems /> : ""
         }
-        <Nav>
-          {logInOrOut}
-        </Nav>
+        {logInOrOut}
       </Navbar>
     );
   }

@@ -68,6 +68,39 @@ export function signUp(data) {
   }
 }
 
+export function loginUser(creds) {
+  const { username, password } = creds
+  let config = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  }
+
+  return dispatch => {
+    if (username ===  "" || password === "") {
+      dispatch(loginError("Username and password can't be blank."));
+      return
+    }
+
+    dispatch(requestLogin({ username, password }))
+    return fetch(`${BASE_URL}auth`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(loginError(json.message))
+        } else {
+          const { access_token } = json;
+          localStorage.setItem('id_token', access_token);
+          dispatch(receiveLogin(access_token))
+          dispatch(fetchCurrentUserDetails())
+          browserHistory.replace("/home")
+        }
+      })
+      .catch(err => console.log("Error: ", err))
+  }
+}
+
 export function requestLogin(creds) {
   return {
     type: LOGIN_REQUEST,
@@ -151,7 +184,6 @@ export function fetchUsers() {
       'Authorization': `JWT ${id_token}`
     },
   }
-
 
   // We dispatch requestLogin to kickoff the call to the API
   return dispatch => {
