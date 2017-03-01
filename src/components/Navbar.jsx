@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logoutUser } from '../actions';
+import { logoutUser } from '../actions/auth';
 import TeacherNavItems from './TeacherNavItems';
 import AdminNavItems from './AdminNavItems';
 import StudentNavItems from './StudentNavItems';

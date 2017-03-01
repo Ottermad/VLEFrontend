@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signUp } from '../actions';
+import { signUp } from '../actions/signUp';
 import { browserHistory } from 'react-router';
 
 class SchoolSignUp extends Component {
