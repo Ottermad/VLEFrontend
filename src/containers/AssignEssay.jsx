@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchLessonsTaught, assignEssay } from '../actions';
+import { fetchLessonsTaught } from '../actions/lessons';
+import { assignEssay } from '../actions/homework/essay';
 import moment from 'moment';
 
 class AssignEssay extends Component {

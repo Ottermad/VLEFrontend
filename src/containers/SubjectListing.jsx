@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchSubjects } from '../actions';
+import { fetchSubjects } from '../actions/subjects';
 import { connect } from 'react-redux';
 
 class SubjectListing extends Component {

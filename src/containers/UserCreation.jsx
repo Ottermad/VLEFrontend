@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  fetchPermissions,
-  createUser
-} from '../actions';
+import { createUser } from '../actions/user';
+import {  fetchPermissions } from '../actions/permissions';
 
 class UserCreation extends Component {
   constructor(props) {
@@ -18,7 +16,7 @@ class UserCreation extends Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.fetchPermissions()
   }
 
@@ -37,7 +35,12 @@ class UserCreation extends Component {
     this.setState({permissions: value});
   }
 
+  componentWillReceiveProps(nextProps){
+    console.log("new props", nextProps)
+  }
+
   render() {
+    console.log("PROPS",this.props)
     return (
       <div>
         <h2>Create User</h2>

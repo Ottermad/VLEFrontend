@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchSubmissions } from '../actions';
+import { fetchSubmissions } from '../actions/homework';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 

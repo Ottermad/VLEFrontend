@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchEssay, submitEssay } from '../actions';
+import { fetchEssay, submitEssay } from '../actions/homework/essay';
 import { browserHistory } from 'react-router';
 
 class SubmitEssay extends Component {

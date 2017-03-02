@@ -1,10 +1,12 @@
 import {
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
   GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
-} from '../actions';
+} from '../constants';
 
 
 export function permissionsListing(state = {permissions: []}, action) {
+  console.log(FETCH_PERMISSIONS_SUCCESS)
+  console.log("permissionsListing", action)
   switch (action.type) {
     case FETCH_PERMISSIONS_REQUEST:
       return state;
@@ -13,10 +15,12 @@ export function permissionsListing(state = {permissions: []}, action) {
         errorMessage: action.message
       });
     case FETCH_PERMISSIONS_SUCCESS:
+      console.log("succes")
       return Object.assign({}, state, {
         permissions: action.permissions
       })
     default:
+      console.log('default')
       return state;
 
   }

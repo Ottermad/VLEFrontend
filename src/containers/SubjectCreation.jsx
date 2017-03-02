@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   createSubject
-} from '../actions';
+} from '../actions/subjects';
 
 class SubjectCreation extends Component {
   constructor(props) {

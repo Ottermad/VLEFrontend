@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 
 import reducer from './reducers';
 
-import {receiveLogin, fetchCurrentUserDetailsSuccess} from './actions';
+import {receiveLogin, fetchCurrentUserDetailsSuccess} from './actions/auth';
 
 import {requireAuthentication} from './components/AuthenticatedComponent';
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchLessons } from '../actions';
+import { fetchLessons } from '../actions/lessons';
 import { connect } from 'react-redux';
 
 class LessonListing extends Component {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchUsers } from '../actions';
+import { fetchUsers } from '../actions/user';
 import { connect } from 'react-redux';
 
 class UserListing extends Component {

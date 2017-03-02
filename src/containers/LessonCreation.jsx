@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createLesson, fetchUsers, fetchSubjects } from '../actions';
+import { createLesson } from '../actions/lessons';
+import { fetchUsers } from '../actions/user';
+import { fetchSubjects } from '../actions/subjects';
 
 class LessonCreation extends Component {
   constructor(props) {

@@ -1,7 +1,8 @@
 import { BASE_URL } from './index';
 import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-  LOGOUT_REQUEST, LOGOUT_SUCCESS
+  LOGOUT_REQUEST, LOGOUT_SUCCESS,
+  FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS
 } from '../constants';
 import { browserHistory } from 'react-router';
 
@@ -47,7 +48,7 @@ function requestLogin(creds) {
   }
 }
 
-function receiveLogin(id_token) {
+export function receiveLogin(id_token) {
   return {
     type: LOGIN_SUCCESS,
     isFetching: false,
@@ -89,5 +90,68 @@ export function logoutUser() {
     dispatch(receiveLogout())
     dispatch(removeCurrentUserDetails())
     browserHistory.replace("/login")
+  }
+}
+
+// Fetch Current User Details
+function fetchCurrentUserDetailsRequest() {
+  return {
+    type: FETCH_CURRENT_USER_DETAILS_REQUEST
+  }
+}
+
+function fetchCurrentUserDetailsFailure(message) {
+  return {
+    type: FETCH_CURRENT_USER_DETAILS_FAILURE,
+    message
+  }
+}
+
+function removeCurrentUserDetails() {
+  return {
+    type: REMOVE_CURRENT_USER_DETAILS,
+  }
+}
+
+export function fetchCurrentUserDetailsSuccess(user) {
+  return {
+    type: FETCH_CURRENT_USER_DETAILS_SUCCESS,
+    user
+  }
+}
+
+export function fetchCurrentUserDetails() {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(fetchCurrentUserDetailsRequest())
+    return fetch(`${BASE_URL}user/me?nest-permissions=true`, config)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json)
+        if ("error" in json) {
+          dispatch(fetchCurrentUserDetailsFailure(json.message))
+        } else {
+          const { user } = json;
+          user.isTeacher = user.permissions.some(permission => {
+            return permission.name === "Teacher";
+          });
+          user.isAdmin = user.permissions.some(permission => {
+            return permission.name === "Administrator";
+          });
+          user.isStudent = user.permissions.some(permission => {
+            return permission.name === "Student";
+          });
+          localStorage.setItem('currentUser', JSON.stringify(user))
+          dispatch(fetchCurrentUserDetailsSuccess(user))
+        }
+      })
+      .catch(err => console.log("Error: ", err))
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchEssaySubmission } from '../actions';
+import { fetchEssaySubmission } from '../actions/homework/essay';
 import { connect } from 'react-redux';
 
 class ViewEssay extends Component {

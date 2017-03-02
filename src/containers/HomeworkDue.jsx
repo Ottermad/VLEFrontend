@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchHomeworkDue } from '../actions';
+import { fetchHomeworkDue } from '../actions/homework';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Link } from 'react-router';

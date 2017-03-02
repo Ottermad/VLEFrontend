@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchLessonsTaught } from '../actions';
+import { fetchLessonsTaught } from '../actions/lessons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
