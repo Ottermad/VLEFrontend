@@ -1,7 +1,8 @@
 import { BASE_URL } from './index';
 import {
   FETCH_PERMISSIONS_REQUEST, FETCH_PERMISSIONS_SUCCESS, FETCH_PERMISSIONS_FAILURE,
-  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS
+  GRANT_PERMISSION_REQUEST, GRANT_PERMISSION_FAILURE, GRANT_PERMISSION_SUCCESS,
+  REVOKE_PERMISSION_REQUEST, REVOKE_PERMISSION_SUCCESS, REVOKE_PERMISSION_FAILURE
 } from '../constants';
 
 export function fetchPerimissionsRequest() {
@@ -100,5 +101,51 @@ export function grantPermissionFailure(message) {
   return {
     type: GRANT_PERMISSION_FAILURE,
     message
+  }
+}
+
+// Revoke Permissions
+function revokePermissionRequest() {
+  return {
+    type: REVOKE_PERMISSION_REQUEST
+  }
+}
+
+function revokePermissionSuccess() {
+  return {
+    type: REVOKE_PERMISSION_SUCCESS,
+  }
+}
+
+function revokePermissionFailure(message) {
+  return {
+    type: REVOKE_PERMISSION_FAILURE,
+    message
+  }
+}
+
+export function revokePermission(user_id, permission_id, all=false) {
+  const id_token = localStorage.getItem('id_token')
+
+  let config = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify({ permission_id, user_id, all })
+  }
+
+  return dispatch => {
+    dispatch(revokePermissionRequest())
+    fetch(`${BASE_URL}permissions/permission/grant`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(revokePermissionFailure(json.message))
+      } else {
+        dispatch(revokePermissionSuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fetchUsers } from '../actions/user';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 class UserListing extends Component {
 
@@ -41,6 +42,9 @@ class UserListing extends Component {
                           )
                         })
                       }
+                    </td>
+                    <td>
+                      <Link to={`/admin/users/edit/${id}`}>Edit</Link>
                     </td>
                   </tr>
                 );

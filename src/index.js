@@ -15,6 +15,7 @@ import Main from './containers/Main'
 import Login from './containers/Login';
 import UserListing from './containers/UserListing';
 import UserCreation from './containers/UserCreation';
+import UserEdit from './containers/UserEdit';
 import SubjectCreation from './containers/SubjectCreation';
 import SubjectListing from './containers/SubjectListing';
 import LessonListing from './containers/LessonListing';
@@ -50,6 +51,7 @@ ReactDOM.render(
         <Route path="admin">
           <Route path="users" component={requireAuthentication(UserListing)} />
           <Route path="users/create" component={requireAuthentication(UserCreation)}/>
+          <Route path="users/edit/:id" component={requireAuthentication(UserEdit)}/>
           <Route path="subjects" component={requireAuthentication(SubjectListing)}/>
           <Route path="subjects/create" component={requireAuthentication(SubjectCreation)} />
           <Route path="lessons" component={requireAuthentication(LessonListing)}/>

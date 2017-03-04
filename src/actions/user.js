@@ -1,10 +1,13 @@
 import { BASE_URL } from './index';
 import {
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
-  USER_CREATE_SUCCESS, USER_CREATE_REQUEST, USER_CREATE_FAILURE
+  USER_CREATE_SUCCESS, USER_CREATE_REQUEST, USER_CREATE_FAILURE,
+  USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE,
+  USER_DETAIL_REQUEST, USER_DETAIL_FAILURE, USER_DETAIL_SUCCESS
 } from '../constants';
-import { grantPermission } from './permissions';
+import { grantPermission, revokePermission } from './permissions';
 
+// Fetch Users
 export function requestUsers() {
   return {
     type: USERS_REQUEST
@@ -53,6 +56,7 @@ export function fetchUsers() {
   }
 }
 
+// User Creation
 export function userCreateRequest() {
   return {
     type: USER_CREATE_REQUEST
@@ -100,6 +104,107 @@ export function createUser(user) {
           console.log('permission', permission)
           dispatch(grantPermission(permission, user.id));
         });
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
+
+// User Edit
+function userEditRequest() {
+  return {
+    type: USER_EDIT_REQUEST
+  }
+}
+
+function userEditSuccess() {
+  return {
+    type: USER_EDIT_SUCCESS
+  }
+}
+
+function userEditFailure(message) {
+  return {
+    type: USER_EDIT_FAILURE,
+    message
+  }
+}
+
+export function editUser(user) {
+  console.log('called')
+  const { id, permissions } = user;
+  const id_token = localStorage.getItem('id_token')
+  console.log(user)
+  let config = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify(user)
+  }
+
+  return dispatch => {
+    dispatch(userEditRequest())
+    fetch(`${BASE_URL}user/user/${id}`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(userEditFailure(json.message))
+        console.log(json.message)
+      } else {
+        dispatch(userEditSuccess());
+        console.log("success")
+        dispatch(revokePermission(id, null, true))
+        permissions.forEach(permission => {
+          console.log('permission', permission)
+          dispatch(grantPermission(permission, id));
+        });
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
+
+
+// Fetch User Detail
+function userDetailRequest() {
+  return {
+    type: USER_DETAIL_REQUEST
+  }
+}
+
+function userDetailSuccess(user) {
+  return {
+    type: USER_DETAIL_SUCCESS,
+    user
+  }
+}
+
+function userDetailFailure(message) {
+  return {
+    type: USER_DETAIL_FAILURE,
+    message
+  }
+}
+
+export function fetchUserDetail(user_id) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'GET',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(userDetailRequest())
+    fetch(`${BASE_URL}user/user/${user_id}?nest-permissions=true`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(userDetailFailure(json.message))
+      } else {
+        const { user } = json;
+        dispatch(userDetailSuccess(user));
       }
     }).catch(err => console.log("Error: ", err))
   }

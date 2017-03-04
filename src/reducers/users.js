@@ -1,6 +1,8 @@
 import {
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
   USER_CREATE_REQUEST, USER_CREATE_SUCCESS, USER_CREATE_FAILURE,
+  USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE,
+  USER_DETAIL_REQUEST, USER_DETAIL_FAILURE, USER_DETAIL_SUCCESS,
   FETCH_CURRENT_USER_DETAILS_REQUEST, FETCH_CURRENT_USER_DETAILS_FAILURE, FETCH_CURRENT_USER_DETAILS_SUCCESS, REMOVE_CURRENT_USER_DETAILS,
 } from '../constants'
 
@@ -41,6 +43,24 @@ export function userCreate(state = {createdUser: {}}, action) {
   }
 }
 
+export function userEdit(state = {}, action) {
+  switch (action.type) {
+    case USER_EDIT_REQUEST:
+      return state;
+    case USER_EDIT_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message
+      });
+    case USER_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: "User updated"
+      });
+    default:
+      return state;
+
+  }
+}
+
 export function fetchCurrentUserDetails(state = {user: {}}, action) {
   switch (action.type) {
     case FETCH_CURRENT_USER_DETAILS_REQUEST:
@@ -60,5 +80,22 @@ export function fetchCurrentUserDetails(state = {user: {}}, action) {
     default:
       return state;
 
+  }
+}
+
+export function fetchUser(state = {user: {}}, action) {
+  switch (action.type) {
+    case USER_DETAIL_REQUEST:
+      return state;
+    case USER_DETAIL_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case USER_DETAIL_SUCCESS:
+      return Object.assign({}, state, {
+        user: action.user,
+      });
+    default:
+      return state;
   }
 }
