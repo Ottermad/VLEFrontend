@@ -15,8 +15,15 @@ class UserEdit extends Component {
 
   editUser(user) {
     // Remove password
-    delete user.password;
+    if (user.password === "") {
+      delete user.password;
+    }
+    user.old_permissions = this.props.user.permissions.map(permission => {
+      return permission.id.toString();
+    });
     this.props.editUser(user)
+    // console.log(user)
+    // console.log(this.props)
   }
 
   render() {
@@ -24,9 +31,9 @@ class UserEdit extends Component {
     let errorDiv = (
       <div>
         {
-          this.props.errors.map(error => {
+          this.props.errors.map((error, index) => {
             if (error && error.length > 0) {
-              return <ErrorDiv message={error}/>
+              return <ErrorDiv message={error} key={index}/>
             }
             return "";
           })
@@ -47,6 +54,7 @@ class UserEdit extends Component {
           permissions={this.props.permissions}
           errorMessage={this.props.errorMessage}
           user={this.props.user}
+          renderPassword
         />
       </div>
     );

@@ -132,7 +132,7 @@ function userEditFailure(message) {
 
 export function editUser(user) {
   console.log('called')
-  const { id, permissions } = user;
+  const { id, permissions, old_permissions } = user;
   const id_token = localStorage.getItem('id_token')
   console.log(user)
   let config = {
@@ -155,11 +155,17 @@ export function editUser(user) {
       } else {
         dispatch(userEditSuccess());
         console.log("success")
-        dispatch(revokePermission(id, null, true))
         permissions.forEach(permission => {
-          console.log('permission', permission)
-          dispatch(grantPermission(permission, id));
-        });
+          if (!old_permissions.includes(permission)) {
+            dispatch(grantPermission(permission, id));
+          }
+        })
+
+        old_permissions.forEach(permission => {
+          if (!permissions.includes(permission)) {
+            dispatch(revokePermission(id, permission, false));
+          }
+        })
       }
     }).catch(err => console.log("Error: ", err))
   }
