@@ -3,6 +3,7 @@ import {
   USERS_REQUEST, USERS_SUCCESS, USERS_FAILURE,
   USER_CREATE_SUCCESS, USER_CREATE_REQUEST, USER_CREATE_FAILURE,
   USER_EDIT_REQUEST, USER_EDIT_SUCCESS, USER_EDIT_FAILURE,
+  USER_DELETE_SUCCESS, USER_DELETE_REQUEST, USER_DELETE_FAILURE,
   USER_DETAIL_REQUEST, USER_DETAIL_FAILURE, USER_DETAIL_SUCCESS
 } from '../constants';
 import { grantPermission, revokePermission } from './permissions';
@@ -164,6 +165,48 @@ export function editUser(user) {
   }
 }
 
+// User Delete
+function userDeleteRequest() {
+  return {
+    type: USER_DELETE_REQUEST
+  }
+}
+
+function userDeleteSuccess() {
+  return {
+    type: USER_DELETE_SUCCESS
+  }
+}
+
+function userDeleteFailure(message) {
+  return {
+    type: USER_DELETE_FAILURE,
+    message
+  }
+}
+
+export function deleteUser(user_id) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `JWT ${id_token}`
+    },
+  }
+
+  return dispatch => {
+    dispatch(userDeleteRequest())
+    fetch(`${BASE_URL}user/user/${user_id}`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(userDeleteFailure(json.message))
+      } else {
+        dispatch(userDeleteSuccess());
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
 
 // Fetch User Detail
 function userDetailRequest() {
