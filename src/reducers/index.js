@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import auth from './auth';
 import signUp from './signUp';
 import { permissionsListing, grantPermission, revokePermission } from './permissions';
-import { createSubject, subjectListing, subjectDelete, subjectEdit } from './subjects';
+import { createSubject, subjectListing, subjectDelete, subjectEdit, subjectDetail } from './subjects';
 import { lessonListing, createLesson, lessonDetail, lessonsTaughtListing } from './lessons';
 import { fetchEssaySubmission, fetchEssay, submitEssay, assignEssay } from './homework/essay';
 import { fetchHomeworkDue, fetchSubmissions } from './homework';
@@ -22,6 +22,7 @@ const reducer = combineReducers({
   createSubject,
   subjectEdit,
   subjectDelete,
+  subjectDetail,
   subjectListing,
   grantPermission,
   revokePermission,

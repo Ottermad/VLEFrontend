@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  createSubject
-} from '../actions/subjects';
+import SubjectForm from '../components/SubjectForm';
+import { createSubject } from '../actions/subjects';
 
 class SubjectCreation extends Component {
   constructor(props) {
@@ -12,9 +11,8 @@ class SubjectCreation extends Component {
     }
   }
 
-  createSubject(e) {
-    e.preventDefault();
-    this.props.createSubject(this.state.name)
+  createSubject(subject) {
+    this.props.createSubject(subject.name)
   }
 
   render() {
@@ -41,25 +39,7 @@ class SubjectCreation extends Component {
         <h2>Create Subject</h2>
         {successDiv}
         {errorDiv}
-        <form>
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              placeholder="Name"
-              onChange={event => this.setState({name: event.target.value})}
-            />
-          </div>
-          <button
-            type="submit"
-            className="btn btn-success"
-            onClick={(e) => {this.createSubject(e)}}
-          >
-            Submit
-          </button>
-        </form>
+        <SubjectForm callback={this.createSubject.bind(this)}/>
       </div>
     );
   }

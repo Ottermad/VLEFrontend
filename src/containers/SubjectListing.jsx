@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { fetchSubjects, deleteSubject } from '../actions/subjects';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import SuccessDiv from '../components/SuccessDiv';
 import ErrorDiv from '../components/ErrorDiv';
@@ -75,6 +76,9 @@ class SubjectListing extends Component {
                 return (
                   <tr key={id}>
                     <td>{name}</td>
+                    <td>
+                      <Link to={`/admin/subjects/edit/${id}`}>Edit</Link>
+                    </td>
                     <td>
                       <button
                         className="btn-small btn-danger btn"

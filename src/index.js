@@ -12,16 +12,22 @@ import {requireAuthentication} from './components/AuthenticatedComponent';
 
 import App from './containers/App';
 import Main from './containers/Main'
+
 import Login from './containers/Login';
+
 import UserListing from './containers/UserListing';
 import UserCreation from './containers/UserCreation';
 import UserEdit from './containers/UserEdit';
+
 import SubjectCreation from './containers/SubjectCreation';
 import SubjectListing from './containers/SubjectListing';
+import SubjectEdit from './containers/SubjectEdit';
+
 import LessonListing from './containers/LessonListing';
 import LessonCreation from './containers/LessonCreation';
 import TeacherLessonListing from './containers/TeacherLessonListing';
 import LessonDetail from './containers/LessonDetail';
+
 import AssignEssay from './containers/AssignEssay';
 import HomeworkDue from './containers/HomeworkDue';
 import SubmitEssay from './containers/SubmitEssay';
@@ -54,6 +60,7 @@ ReactDOM.render(
           <Route path="users/edit/:id" component={requireAuthentication(UserEdit)}/>
           <Route path="subjects" component={requireAuthentication(SubjectListing)}/>
           <Route path="subjects/create" component={requireAuthentication(SubjectCreation)} />
+          <Route path="subjects/edit/:id" component={requireAuthentication(SubjectEdit)} />
           <Route path="lessons" component={requireAuthentication(LessonListing)}/>
           <Route path="lessons/create" component={requireAuthentication(LessonCreation)} />
         </Route>
