@@ -1,5 +1,7 @@
 import {
   SUBJECT_CREATE_REQUEST, SUBJECT_CREATE_FAILURE, SUBJECT_CREATE_SUCCESS,
+  SUBJECT_EDIT_REQUEST, SUBJECT_EDIT_FAILURE, SUBJECT_EDIT_SUCCESS,
+  SUBJECT_DELETE_REQUEST, SUBJECT_DELETE_SUCCESS, SUBJECT_DELETE_FAILURE,
   SUBJECT_LISTING_REQUEST, SUBJECT_LISTING_FAILURE, SUBJECT_LISTING_SUCCESS
 } from '../constants';
 
@@ -37,5 +39,42 @@ export function subjectListing(state = {subjects: []}, action) {
       })
     default:
       return state;
+  }
+}
+
+export function subjectEdit(state = {}, action) {
+  switch(action.type) {
+    case SUBJECT_EDIT_REQUEST:
+      return state;
+    case SUBJECT_EDIT_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case SUBJECT_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: "User updated"
+      })
+    default:
+      return state;
+  }
+}
+
+export function subjectDelete(state = {successMessage: null, errorMessage: null}, action) {
+  switch (action.type) {
+    case SUBJECT_DELETE_REQUEST:
+      return state;
+    case SUBJECT_DELETE_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+        successMessage: null
+      });
+    case SUBJECT_DELETE_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: "Subject deleted.",
+        errorMessage: null
+      });
+    default:
+      return state;
+
   }
 }

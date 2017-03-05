@@ -2,14 +2,14 @@ import { combineReducers } from 'redux';
 import auth from './auth';
 import signUp from './signUp';
 import { permissionsListing, grantPermission, revokePermission } from './permissions';
-import { createSubject, subjectListing } from './subjects';
+import { createSubject, subjectListing, subjectDelete, subjectEdit } from './subjects';
 import { lessonListing, createLesson, lessonDetail, lessonsTaughtListing } from './lessons';
 import { fetchEssaySubmission, fetchEssay, submitEssay, assignEssay } from './homework/essay';
 import { fetchHomeworkDue, fetchSubmissions } from './homework';
 import { usersListing, userCreate, fetchCurrentUserDetails, userEdit, fetchUser, userDelete } from './users';
 
 // We combine the reducers here so that they
-// can be left split apart above
+// can be left split apart in different files
 const reducer = combineReducers({
   signUp,
   auth,
@@ -20,6 +20,8 @@ const reducer = combineReducers({
   userDelete,
   fetchUser,
   createSubject,
+  subjectEdit,
+  subjectDelete,
   subjectListing,
   grantPermission,
   revokePermission,
