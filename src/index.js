@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -11,7 +11,8 @@ import {receiveLogin, fetchCurrentUserDetailsSuccess} from './actions/auth';
 import {requireAuthentication} from './components/AuthenticatedComponent';
 
 import App from './containers/App';
-import Main from './containers/Main'
+import Main from './containers/Main';
+import Welcome from './components/Welcome';
 
 import Login from './containers/Login';
 
@@ -53,6 +54,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router  path="/" history={browserHistory}>
       <Route path="/" component={App}>
+        <IndexRoute component={Welcome} />
         <Route path="home" component={requireAuthentication(Main)}/>
         <Route path="admin">
           <Route path="users" component={requireAuthentication(UserListing)} />

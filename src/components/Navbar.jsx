@@ -39,6 +39,7 @@ class MainNavbar extends Component {
             VLE
           </Navbar.Brand>
         </Navbar.Header>
+        { this.props.isAuthenticated ? <Nav><LinkContainer to="/home"><NavItem>Home</NavItem></LinkContainer></Nav> : ""}
         {
           this.props.currentUser.isTeacher ? <TeacherNavItems /> : ""
         }
