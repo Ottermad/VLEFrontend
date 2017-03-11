@@ -3,7 +3,7 @@ import auth from './auth';
 import signUp from './signUp';
 import { permissionsListing, grantPermission, revokePermission } from './permissions';
 import { createSubject, subjectListing, subjectDelete, subjectEdit, subjectDetail } from './subjects';
-import { lessonListing, createLesson, lessonDetail, lessonsTaughtListing } from './lessons';
+import { lessonListing, createLesson, lessonDetail, lessonsTaughtListing, lessonDelete } from './lessons';
 import { fetchEssaySubmission, fetchEssay, submitEssay, assignEssay } from './homework/essay';
 import { fetchHomeworkDue, fetchSubmissions } from './homework';
 import { usersListing, userCreate, fetchCurrentUserDetails, userEdit, fetchUser, userDelete } from './users';
@@ -28,6 +28,7 @@ const reducer = combineReducers({
   revokePermission,
   lessonListing,
   createLesson,
+  lessonDelete,
   lessonsTaughtListing,
   lessonDetail,
   assignEssay,
