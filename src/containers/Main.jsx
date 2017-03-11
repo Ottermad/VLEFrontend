@@ -8,6 +8,7 @@ class Main extends Component {
   render() {
     return (
       <div>
+        <h1>Hello {this.props.currentUser.first_name},</h1>
         <p>Welcome! If this is your first visit then here are a few things to know.</p>
         <ol>
           <li>
