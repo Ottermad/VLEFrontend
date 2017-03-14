@@ -3,7 +3,8 @@ import {
   LESSON_TAUGHT_LISTING_REQUEST, LESSON_TAUGHT_LISTING_FAILURE, LESSON_TAUGHT_LISTING_SUCCESS,
   LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE,
   LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
-  LESSON_DELETE_REQUEST, LESSON_DELETE_SUCCESS, LESSON_DELETE_FAILURE
+  LESSON_DELETE_REQUEST, LESSON_DELETE_SUCCESS, LESSON_DELETE_FAILURE,
+  LESSON_EDIT_REQUEST, LESSON_EDIT_SUCCESS, LESSON_EDIT_FAILURE
 } from '../constants';
 
 export function lessonListing(state = {lessons: []}, action) {
@@ -73,6 +74,23 @@ export function lessonDetail(state = {lesson: {name: '', homework: [], teachers:
       return Object.assign({}, state, {
         lesson: action.lesson,
       });
+    default:
+      return state;
+  }
+}
+
+export function lessonEdit(state = {}, action) {
+  switch(action.type) {
+    case LESSON_EDIT_REQUEST:
+      return state;
+    case LESSON_EDIT_FAILURE:
+      return Object.assign({}, state, {
+        errorMessage: action.message,
+      });
+    case LESSON_EDIT_SUCCESS:
+      return Object.assign({}, state, {
+        successMessage: "Lesson updated"
+      })
     default:
       return state;
   }

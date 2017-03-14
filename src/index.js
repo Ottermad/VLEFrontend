@@ -28,6 +28,7 @@ import LessonListing from './containers/LessonListing';
 import LessonCreation from './containers/LessonCreation';
 import TeacherLessonListing from './containers/TeacherLessonListing';
 import LessonDetail from './containers/LessonDetail';
+import LessonEdit from './containers/LessonEdit';
 
 import AssignEssay from './containers/AssignEssay';
 import HomeworkDue from './containers/HomeworkDue';
@@ -65,6 +66,8 @@ ReactDOM.render(
           <Route path="subjects/edit/:id" component={requireAuthentication(SubjectEdit)} />
           <Route path="lessons" component={requireAuthentication(LessonListing)}/>
           <Route path="lessons/create" component={requireAuthentication(LessonCreation)} />
+          <Route path="lessons/edit/:id" component={requireAuthentication(LessonEdit)} />
+          <Route path="lessons/:id" component={requireAuthentication(LessonDetail)} />
         </Route>
         <Route path="teacher">
           <Route path="lessons" component={requireAuthentication(TeacherLessonListing)} />

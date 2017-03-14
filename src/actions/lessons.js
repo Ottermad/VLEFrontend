@@ -4,7 +4,8 @@ import {
   LESSON_CREATE_REQUEST, LESSON_CREATE_SUCCESS, LESSON_CREATE_FAILURE,
   LESSON_TAUGHT_LISTING_REQUEST, LESSON_TAUGHT_LISTING_FAILURE, LESSON_TAUGHT_LISTING_SUCCESS,
   LESSON_DETAIL_REQUEST, LESSON_DETAIL_SUCCESS, LESSON_DETAIL_FAILURE,
-  LESSON_DELETE_REQUEST, LESSON_DELETE_SUCCESS, LESSON_DELETE_FAILURE
+  LESSON_DELETE_REQUEST, LESSON_DELETE_SUCCESS, LESSON_DELETE_FAILURE,
+  LESSON_EDIT_REQUEST, LESSON_EDIT_SUCCESS, LESSON_EDIT_FAILURE
 } from '../constants';
 
 // Lesson Listing functions
@@ -246,3 +247,49 @@ export function deleteLesson(lesson_id) {
     }).catch(err => console.log("Error: ", err))
   }
 }
+
+// Lesson Editing
+function lessonEditRequest() {
+  return {
+    type: LESSON_EDIT_REQUEST
+  }
+}
+
+function lessonEditSuccess() {
+  return {
+    type: LESSON_EDIT_SUCCESS
+  }
+}
+
+function lessonEditFailure(message) {
+  return {
+    type: LESSON_EDIT_FAILURE,
+    message
+  }
+}
+
+export function editLesson(lesson, lesson_id) {
+  const id_token = localStorage.getItem('id_token')
+  let config = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${id_token}`
+    },
+    body: JSON.stringify(lesson)
+  }
+
+  return dispatch => {
+    dispatch(lessonEditRequest())
+    fetch(`${BASE_URL}lessons/lesson/${lesson_id}`, config)
+    .then(response => response.json())
+    .then(json => {
+      if ("error" in json) {
+        dispatch(lessonEditFailure(json.message))
+      } else {
+        dispatch(lessonEditSuccess())
+      }
+    }).catch(err => console.log("Error: ", err))
+  }
+}
+

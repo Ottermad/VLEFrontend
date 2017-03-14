@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fetchLessons, deleteLesson } from '../actions/lessons';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import SuccessDiv from '../components/SuccessDiv';
 import ErrorDiv from '../components/ErrorDiv';
 
@@ -74,6 +75,12 @@ class LessonListing extends Component {
                 return (
                   <tr key={id}>
                     <td>{name}</td>
+                    <td>
+                      <Link to={`/admin/lessons/${id}`}>View</Link>
+                    </td>
+                    <td>
+                      <Link to={`/admin/lessons/edit/${id}`}>Edit</Link>
+                    </td>
                     <td>
                       <button
                         className="btn-small btn-danger btn"

@@ -69,7 +69,7 @@ class LessonDetail extends Component {
                     <td>{homework.type}</td>
                     <td>{homework.description}</td>
                     <td>{homework.date_due}</td>
-                    <td><Link to={`/teacher/homework/${homework.id}/submissions`}>View Submissions</Link></td>
+                    { this.props.currentUser.isTeacher ? <td><Link to={`/teacher/homework/${homework.id}/submissions`}>View Submissions</Link></td> : "" }
                   </tr>
                 )
               })
@@ -82,8 +82,9 @@ class LessonDetail extends Component {
 }
 
 function mapStateToProps(state) {
+  const currentUser = state.fetchCurrentUserDetails.user; 
   const { lesson, errorMessage } = state.lessonDetail;
-  return { lesson, errorMessage }
+  return { lesson, errorMessage, currentUser }
 }
 
 export default connect(mapStateToProps, { fetchLesson })(LessonDetail);
