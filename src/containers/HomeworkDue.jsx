@@ -31,7 +31,7 @@ class HomeworkDue extends Component {
                 const dateDueMoment = moment(homework.date_due, "DD/MM/YYYY")
                 const isDue = dateDueMoment.isAfter(now) || dateDueMoment.isSame(now)
                 console.log(homework)
-                let submitted = <td>Submitted</td>
+                let submitted = <td><Link to={`/student/submissions/${homework.type}/${homework.submission.id}`}>View Submission</Link></td>
                 if (!homework.submitted) {
                   submitted = <td><Link to={`/student/submit/${homework.type}/${homework.id}`}>Submit</Link></td>
                 }

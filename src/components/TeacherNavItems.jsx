@@ -13,6 +13,9 @@ class TeacherNavItems extends Component {
           <LinkContainer to={{ pathname: '/teacher/assign/essay' }}>
             <MenuItem>Assign Essay</MenuItem>
           </LinkContainer>
+          <LinkContainer to={{ pathname: '/teacher/assign/quiz' }}>
+            <MenuItem>Assign Quiz</MenuItem>
+          </LinkContainer>
         </NavDropdown>
       </Nav>
     );

@@ -31,10 +31,16 @@ import LessonDetail from './containers/LessonDetail';
 import LessonEdit from './containers/LessonEdit';
 
 import AssignEssay from './containers/AssignEssay';
-import HomeworkDue from './containers/HomeworkDue';
 import SubmitEssay from './containers/SubmitEssay';
-import SubmissionsListing from './containers/SubmissionsListing';
 import ViewEssay from './containers/ViewEssay';
+
+import AssignQuiz from './containers/AssignQuiz';
+import SubmitQuiz from './containers/SubmitQuiz';
+import ViewQuiz from './containers/ViewQuiz';
+
+import HomeworkDue from './containers/HomeworkDue';
+import SubmissionsListing from './containers/SubmissionsListing';
+
 import SchoolSignUp from './containers/SchoolSignUp';
 
 import thunkMiddleware from 'redux-thunk'
@@ -74,15 +80,20 @@ ReactDOM.render(
           <Route path="lessons/:id" component={requireAuthentication(LessonDetail)} />
           <Route path="assign">
             <Route path="essay" component={requireAuthentication(AssignEssay)}/>
+            <Route path="quiz" component={requireAuthentication(AssignQuiz)} />
           </Route>
           <Route path="homework/:id/submissions" component={requireAuthentication(SubmissionsListing)}/>
           <Route path="submissions/essay/:id" component={requireAuthentication(ViewEssay)}/>
+          <Route path="submissions/quiz/:id" component={requireAuthentication(ViewQuiz)}/>
         </Route>
         <Route path="student">
           <Route path="homework" component={requireAuthentication(HomeworkDue)} />
           <Route path="submit">
             <Route path="essay/:id" component={requireAuthentication(SubmitEssay)}/>
+            <Route path="quiz/:id" component={requireAuthentication(SubmitQuiz)}/>
           </Route>
+          <Route path="submissions/essay/:id" component={requireAuthentication(ViewEssay)}/>
+          <Route path="submissions/quiz/:id" component={requireAuthentication(ViewQuiz)}/>
         </Route>
         <Route path="login" component={Login} />
         <Route path="signup" component={SchoolSignUp} />

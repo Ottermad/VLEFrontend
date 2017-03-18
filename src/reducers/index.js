@@ -5,8 +5,10 @@ import { permissionsListing, grantPermission, revokePermission } from './permiss
 import { createSubject, subjectListing, subjectDelete, subjectEdit, subjectDetail } from './subjects';
 import { lessonListing, createLesson, lessonDetail, lessonsTaughtListing, lessonDelete, lessonEdit } from './lessons';
 import { fetchEssaySubmission, fetchEssay, submitEssay, assignEssay } from './homework/essay';
+import { assignQuiz, submitQuiz, fetchQuiz, fetchQuizSubmission } from './homework/quiz';
 import { fetchHomeworkDue, fetchSubmissions } from './homework';
 import { usersListing, userCreate, fetchCurrentUserDetails, userEdit, fetchUser, userDelete } from './users';
+import { createComment } from './homework/comments';
 
 // We combine the reducers here so that they
 // can be left split apart in different files
@@ -37,8 +39,13 @@ const reducer = combineReducers({
   fetchHomeworkDue,
   fetchEssay,
   submitEssay,
+  assignQuiz,
+  submitQuiz,
+  fetchQuiz,
   fetchSubmissions,
-  fetchEssaySubmission
+  fetchEssaySubmission,
+  fetchQuizSubmission,
+  createComment
 })
 
 export default reducer;

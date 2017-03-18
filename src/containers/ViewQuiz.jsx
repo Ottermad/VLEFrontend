@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchEssaySubmission } from '../actions/homework/essay';
+import { fetchQuizSubmission } from '../actions/homework/quiz';
 import { createComment } from '../actions/homework/comments';
 import { connect } from 'react-redux';
 import SuccessDiv from '../components/SuccessDiv';
@@ -7,7 +7,7 @@ import ErrorDiv from '../components/ErrorDiv';
 import CommentForm from '../components/CommentForm';
 import CommentList from '../components/CommentList';
 
-class ViewEssay extends Component {
+class ViewQuiz extends Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -16,7 +16,7 @@ class ViewEssay extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchEssaySubmission(this.props.params.id)
+    this.props.fetchQuizSubmission(this.props.params.id)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -33,6 +33,7 @@ class ViewEssay extends Component {
   }
 
   render() {
+    console.log(this.props.submission)
     let errorDiv = (
       <div>
         {
@@ -61,13 +62,13 @@ class ViewEssay extends Component {
 
     let response = ""
     if (this.props.hasResponse && !(this.props.error)) {
-      const { homework, user, text, datetime_submitted } = this.props.submission;
-      const { title, description, date_due } = homework;
+      const { homework, user, score, datetime_submitted, answers } = this.props.submission;
+      const { title, description, date_due, number_of_questions, questions } = homework;
       const { first_name, last_name } = user;
 
       response = (
         <div>
-          <h1>Essay - {title}</h1>
+          <h1>Quiz - {title}</h1>
           <em>{description}</em>
           <hr />
           {
@@ -79,7 +80,18 @@ class ViewEssay extends Component {
           <hr />
           <CommentList comments={this.state.comments} />
           <hr />
-          <p>{text}</p>
+          <p><strong>Score</strong>: {score} out of {number_of_questions}</p>
+          {
+            questions.map((question, index) => {
+              return (
+                <div key={index}>
+                  <p>{question.question_text} - { answers[index].correct ? "Correct" : "Wrong"}</p>
+                  <p>Student's answer: {answers[index].answer}</p>
+                  <p>Correct answer: {question.answer}</p>
+                </div>
+              );
+            })
+          }
         </div>
       )
     }
@@ -95,7 +107,7 @@ class ViewEssay extends Component {
 }
 
 function mapStateToProps(state) {
-  const { submission, errorMessageEssay, error, hasResponse } = state.fetchEssaySubmission;
+  const { submission, errorMessageQuiz, error, hasResponse } = state.fetchQuizSubmission;
   const { successMessageComment, errorMessageComment } = state.createComment;
   const currentUser = state.fetchCurrentUserDetails.user;
   return {
@@ -104,8 +116,8 @@ function mapStateToProps(state) {
     hasResponse,
     currentUser,
     success: [successMessageComment],
-    errors: [errorMessageComment, errorMessageEssay],
+    errors: [errorMessageComment, errorMessageQuiz],
   }
 }
 
-export default connect(mapStateToProps, { fetchEssaySubmission, createComment })(ViewEssay);
+export default connect(mapStateToProps, { fetchQuizSubmission, createComment })(ViewQuiz);
