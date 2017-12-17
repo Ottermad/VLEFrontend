@@ -18,12 +18,25 @@ class UserEdit extends Component {
     if (user.password === "") {
       delete user.password;
     }
+
+    // for all properties of user
+    // if property of user hasn't changed then set to undefined
+    // so it's not sent to the server
+    // except id
+
+    for (let [key, value] of Object.entries(user)) {
+      if (key !== "id" && value == this.props.user[key]) {
+        user[key] = undefined
+      }
+    }
+
     user.old_permissions = this.props.user.permissions.map(permission => {
       return permission.id.toString();
     });
+    console.log(JSON.stringify(user))
+    
     this.props.editUser(user)
-    // console.log(user)
-    // console.log(this.props)
+    
   }
 
   render() {
