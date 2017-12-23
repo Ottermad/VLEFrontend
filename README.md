@@ -24,7 +24,8 @@ or
 yarn install
 ```
 
-Then you can run the webserver or just build the files *note: Launching the webserver automatically builds the files*
+Then you can run the webserver or just build the files 
+*Note: Launching the webserver automatically builds the files*
 
 **To run the webserver**
 ```
