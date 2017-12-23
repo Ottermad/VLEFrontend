@@ -14,7 +14,7 @@ brew update
 brew install yarn
 ```
 
-### To build
+## To build
 Make sure dependencies are installed
 ```
 yarn
