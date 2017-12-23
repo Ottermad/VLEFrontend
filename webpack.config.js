@@ -3,7 +3,9 @@
 */
 const path = require('path');
 
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './public/index.html',
   title: "VLE",
@@ -25,5 +27,10 @@ module.exports = {
       { test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ }
     ]
   },
-  plugins: [HtmlWebpackPluginConfig]
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: "public" }
+    ], { ignore: ['*.html'] }),
+    HtmlWebpackPluginConfig
+  ]
 }
